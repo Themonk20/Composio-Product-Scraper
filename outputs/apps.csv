@@ -1,0 +1,2 @@
+name,category,description,auth_methods,self_serve,api_type,api_scope,mcp_available,buildable,blocker,evidence
+Slack,Collaboration,"Welcome to the Slack API docs, the place where ideas turn into interactive apps, workflows get automated, and Slack becomes the platform that powers your workday.",UNKNOWN,Yes,UNKNOWN,Broad,False,True,UNKNOWN,https://docs.slack.dev/
