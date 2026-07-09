@@ -1,118 +1,132 @@
-# AI Product Ops Research Engine
+# API Intelligence Agent
 
-Automated API research pipeline built for the **Composio AI Product Ops Intern** take-home assignment.
+### Automated API Research Pipeline for AI Agent Toolkit Development
 
-The goal of this project is to automate the process of researching third-party applications before building AI agent toolkits. Instead of manually inspecting developer documentation, the pipeline crawls official documentation, extracts structured API information using an LLM, and generates research artifacts for further analysis.
+Built as part of the **Composio AI Product Ops Intern Take-Home Assignment**.
 
 ---
 
-## Problem Statement
+# Overview
 
-Before building an integration toolkit for an application, several questions need to be answered:
+Before Composio builds an AI toolkit for an application, it needs to understand the application's developer ecosystem:
 
 * What does the application do?
 * Which authentication methods are supported?
 * Is the API publicly available?
-* Can developers self-serve API credentials?
-* How broad is the API surface?
-* Does the application already expose an MCP server?
-* Is the application suitable for an AI Agent Toolkit?
+* Can developers self-serve credentials?
+* How extensive is the API surface?
+* Does the platform already expose an MCP server?
+* Is the application suitable for an AI agent toolkit?
 
-Doing this manually across hundreds of applications does not scale.
+Researching this manually across hundreds of SaaS applications is slow and difficult to scale.
 
----
-
-## Solution
-
-This project automates the research workflow using:
-
-* Firecrawl for documentation scraping
-* Groq LLM for structured information extraction
-* Pydantic for response validation
-* Pandas for data storage and analysis
-* Python orchestration for automation
-
-The final output is a structured CSV that can be further analyzed to identify integration opportunities and common patterns across SaaS platforms.
+This project automates a large portion of that research workflow by scraping official documentation, extracting structured API metadata using an LLM, validating the output, and storing the results in a machine-readable format.
 
 ---
 
-## Architecture
+# Features
+
+* Automated documentation scraping
+* Structured API metadata extraction
+* Authentication detection
+* API surface classification
+* Buildability assessment
+* MCP availability detection
+* CSV-based research output
+* Retry mechanism for failed requests
+* Resume support for interrupted runs
+
+---
+
+# Architecture
 
 ```text
-apps.csv
-    │
-    ▼
-Coordinator
-    │
-    ▼
-Research Agent
-    │
-    ├── Firecrawl
-    │      │
-    │      ▼
-    │ Documentation
-    │
-    └── Groq LLM
-            │
-            ▼
-Structured JSON
-            │
-            ▼
-Pydantic Validation
-            │
-            ▼
-results.csv
-            │
-            ▼
-Insights & HTML Report
+                    apps.csv
+                        │
+                        ▼
+                Coordinator Agent
+                        │
+                        ▼
+                Research Agent
+                        │
+        ┌───────────────┴───────────────┐
+        ▼                               ▼
+Documentation Scraper              Groq LLM
+(Requests + BeautifulSoup)    (Structured Extraction)
+        │                               │
+        └───────────────┬───────────────┘
+                        ▼
+              Pydantic Validation
+                        │
+                        ▼
+                  results.csv
+                        │
+                        ▼
+              Insights & HTML Report
 ```
 
 ---
 
-## Workflow
+# Workflow
 
-1. Read application list from `data/apps.csv`
-2. Scrape official API documentation
-3. Extract structured metadata using an LLM
-4. Validate output using Pydantic
-5. Save structured results to CSV
-6. Generate insights and final report
+1. Read the list of applications from `data/apps.csv`
+2. Visit the official developer documentation
+3. Scrape relevant documentation content
+4. Send the documentation to Groq for structured extraction
+5. Validate the extracted fields using Pydantic
+6. Save structured research results to CSV
+7. Generate insights and reports
 
 ---
 
-## Repository Structure
+# Repository Structure
 
 ```text
 .
-├── data/
+├── data
 │   └── apps.csv
 │
-├── outputs/
+├── outputs
 │   └── results.csv
 │
-├── src/
+├── src
 │   ├── coordinator.py
 │   ├── research_agent.py
-│   ├── firecrawl_service.py
+│   ├── scraper.py
 │   ├── llm_service.py
 │   ├── models.py
 │   ├── storage.py
 │   ├── insights.py
+│   ├── report_generator.py
 │   └── main.py
 │
 ├── requirements.txt
 ├── README.md
+├── .gitignore
 └── .env.example
 ```
 
 ---
 
-## Installation
+# Tech Stack
+
+* Python
+* Requests
+* BeautifulSoup4
+* Groq API
+* Pydantic
+* Pandas
+* python-dotenv
+
+---
+
+# Installation
 
 Clone the repository
 
 ```bash
 git clone https://github.com/Themonk20/Composio-Product-Scraper.git
+
 cd Composio-Product-Scraper
 ```
 
@@ -130,6 +144,12 @@ macOS / Linux
 source venv/bin/activate
 ```
 
+Windows
+
+```bash
+venv\\Scripts\\activate
+```
+
 Install dependencies
 
 ```bash
@@ -138,70 +158,99 @@ pip install -r requirements.txt
 
 ---
 
-## Environment Variables
+# Environment Variables
 
-Create a `.env` file.
+Create a `.env` file in the project root.
 
 ```env
-FIRECRAWL_API_KEY=YOUR_FIRECRAWL_KEY
-
-GROQ_API_KEY=YOUR_GROQ_KEY
+GROQ_API_KEY=YOUR_GROQ_API_KEY
 ```
 
 ---
 
-## Run
+# Running the Project
+
+Run the pipeline
 
 ```bash
 python src/main.py
 ```
 
----
+The pipeline will:
 
-## Output
-
-The pipeline generates:
+* Read applications from `data/apps.csv`
+* Scrape documentation
+* Extract structured information
+* Save results into
 
 ```text
 outputs/results.csv
 ```
 
-which contains structured research information for every successfully processed application.
+---
+
+# Output Schema
+
+Each application contains the following fields:
+
+| Field                  | Description                        |
+| ---------------------- | ---------------------------------- |
+| name                   | Application name                   |
+| category               | Product category                   |
+| description            | One-line summary                   |
+| auth_methods           | Authentication methods             |
+| self_serve             | Whether credentials are self-serve |
+| api_type               | REST / GraphQL / Other             |
+| api_scope              | API coverage                       |
+| mcp_available          | MCP support                        |
+| buildable              | Suitable for toolkit               |
+| blocker                | Integration blocker                |
+| evidence               | Documentation URL                  |
+| toolkit_priority       | Estimated integration priority     |
+| integration_difficulty | Easy / Medium / Hard               |
 
 ---
 
-## Tech Stack
+# Verification
 
-* Python
-* Firecrawl
-* Groq
-* Pydantic
-* Pandas
-* Requests
-* dotenv
+To improve reliability:
 
----
-
-## Current Limitations
-
-* Free-tier LLM token limits restricted the number of applications processed in a single execution.
-* Some documentation portals returned HTTP 403/404 responses or required authentication.
-* Certain enterprise APIs require partner access and cannot be fully evaluated without credentials.
+* Information is extracted only from official documentation.
+* Structured responses are validated using Pydantic.
+* Failed requests are retried automatically.
+* The pipeline can resume from previously completed applications.
+* Manual spot-checks can be performed against the documentation links stored in the output.
 
 ---
 
-## Future Improvements
+# Current Limitations
 
-* Multi-page documentation crawling
-* Automatic retry and checkpointing
-* Confidence scoring
-* Browser-based verification
-* Parallel execution
-* Native MCP integration
+* The submission was executed using free-tier LLM access, which limited the number of applications processed in a single run due to token quotas.
+* Some documentation portals returned HTTP 403 or 404 responses.
+* Certain enterprise APIs require authentication or partner access.
+* Some documentation websites required manual verification because of restricted access or non-standard documentation layouts.
+
+---
+
+# Future Improvements
+
+* Browser-based documentation extraction
+* Multi-page crawling
+* Automatic confidence scoring
+* Parallel processing
+* Incremental updates
+* Better authentication detection
 * Automatic HTML report generation
+* Native MCP integration
+* Browser-use verification agent
+* Continuous synchronization for documentation changes
 
 ---
 
-## Assignment
+# Assignment Context
 
-Built as part of the **Composio AI Product Ops Intern** take-home assignment.
+This project was developed for the **Composio AI Product Ops Intern Take-Home Assignment**.
+
+The objective was to automate the research process required before building AI agent toolkits by transforming unstructured API documentation into structured, actionable metadata.
+
+The implementation focuses on automation, structured extraction, reproducibility, and transparent reporting while acknowledging the practical constraints of free-tier API usage.
