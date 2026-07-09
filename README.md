@@ -230,27 +230,5 @@ To improve reliability:
 * Certain enterprise APIs require authentication or partner access.
 * Some documentation websites required manual verification because of restricted access or non-standard documentation layouts.
 
----
 
-# Future Improvements
 
-* Browser-based documentation extraction
-* Multi-page crawling
-* Automatic confidence scoring
-* Parallel processing
-* Incremental updates
-* Better authentication detection
-* Automatic HTML report generation
-* Native MCP integration
-* Browser-use verification agent
-* Continuous synchronization for documentation changes
-
----
-
-# Assignment Context
-
-This project was developed for the **Composio AI Product Ops Intern Take-Home Assignment**.
-
-The objective was to automate the research process required before building AI agent toolkits by transforming unstructured API documentation into structured, actionable metadata.
-
-The implementation focuses on automation, structured extraction, reproducibility, and transparent reporting while acknowledging the practical constraints of free-tier API usage.
